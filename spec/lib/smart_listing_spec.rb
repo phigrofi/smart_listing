@@ -112,6 +112,17 @@ module SmartListing
         end
       end
 
+      context 'when sort params are ActionController::Parameters' do
+        it 'converts parameters to unsafe hash' do
+          list = build_list
+          params = ActionController::Parameters.new(
+            'users_smart_listing' => { sort: { 'name' => 'asc' } }
+          )
+          list.setup(params, {})
+          expect(list.sort).to_not be_a(ActionController::Parameters)
+        end
+      end
+
       context 'when there is no value in params' do
         it 'take the value in options' do
           options = { default_sort: { 'email' => 'asc' } }

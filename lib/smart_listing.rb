@@ -195,7 +195,13 @@ module SmartListing
       sort = nil
 
       if @options[:sort_attributes] == :implicit
-        sort = sort_params.dup if sort_params.present?
+        if sort_params.present?
+          sort = if sort_params.is_a?(ActionController::Parameters)
+                   sort_params.to_unsafe_h
+                 else
+                   sort_params
+                 end
+        end
       elsif @options[:sort_attributes]
         @options[:sort_attributes].each do |a|
           k, v = a
